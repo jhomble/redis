@@ -1,0 +1,3 @@
+base_path = ../../..
+PROG = publish
+include ../../Makefile.in

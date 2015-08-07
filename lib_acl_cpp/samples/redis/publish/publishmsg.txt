@@ -1,0 +1,33 @@
+#include <iostream>
+#include <string>
+#include "stdafx.h"
+
+int main()
+{
+	int conn_timeout = 10, rw_timeout = 0;
+	acl::string addr("135.44.219.210:6379");
+
+	acl::acl_cpp_init();
+	acl::log::stdout_open(true);
+	acl::redis_client client(addr.c_str(), conn_timeout, rw_timeout);
+	acl::redis_pubsub redis(&client);
+
+	redis.clear();
+
+	acl::string channel = "channel", msg;
+	std::string buffer;
+	while(!(msg == "exit")){
+		
+		std::cout << "Enter your message: ";
+		getline(std::cin, buffer);
+		msg.format("%s", buffer.c_str());
+		redis.publish(channel, msg, msg.length());
+	}
+
+#ifdef WIN32
+	printf("enter any key to exit\r\n");
+	getchar();
+#endif
+	return 0;
+}
+
